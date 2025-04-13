@@ -1,4 +1,3 @@
-// src/App.jsx
 import React, { useState } from 'react';
 import ProjectSidebar from './Components/ProjectSidebar';
 import NewProject from './Components/NewProject';
@@ -12,19 +11,32 @@ const App = () => {
 
   // Handle "Create New Project" button click
   const handleStartAddProject = () => {
-    setProjectState(prev => ({
-      ...prev,
+    // Update state to null to enter create mode
+    setProjectState(prevState => ({
+      ...prevState,
       selectedProjectId: null,
     }));
   };
 
+  const handleAddProject = (project) => {
+    // Add the new project to the state
+    setProjectState(prevState => ({
+      ...prevState,
+      projects: [...prevState.projects, project],
+      selectedProjectId: project.id,
+    }));
+  };
+
+  console.log(projectState)
+
   // Determine which content to render in the main area
   let content;
   if (projectState.selectedProjectId === null) {
-    content = <NewProject />;
+    content = <NewProject onAdd={handleAddProject} />;
   } else if (projectState.selectedProjectId === undefined) {
     content = <NoProjectSelected onStartAddProject={handleStartAddProject} />;
-  } 
+  }
+
   return (
     <main className="h-screen my-8 flex gap-8">
       <ProjectSidebar onStartAddProject={handleStartAddProject} />
